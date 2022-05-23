@@ -7,18 +7,20 @@ import (
 	"tz/client"
 )
 
+const blocksCount = 100
+
 func main() {
 	ctx := context.Background()
 	c, err := client.NewClient()
 	if err != nil {
 		log.Panicf("can't initialize client with err %v", err)
 	}
-	log.Println("fetching last 100 blocks")
-	blocks, err := c.FindHundredBlocks(ctx)
+	log.Printf("fetching last %d blocks \n", blocksCount)
+	blocks, err := c.FindBlocks(ctx, blocksCount)
 	if err != nil {
 		log.Panicf("can't fetch last 100 blocks, err - %v", err)
 	}
-	log.Println("got 100 blocks")
+	log.Printf("got %d blocks \n", blocksCount)
 	log.Println("evaluating addresses deltas")
 	addressesWithDelta := make(map[string]*big.Int)
 	for _, block := range blocks {

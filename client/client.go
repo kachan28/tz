@@ -68,13 +68,13 @@ func (c *client) GetBlockByHash(ctx context.Context, hash string) (*models.Block
 	return &block, nil
 }
 
-func (c *client) FindHundredBlocks(ctx context.Context) ([]*models.Block, error) {
+func (c *client) FindBlocks(ctx context.Context, blocksCount int) ([]*models.Block, error) {
 	//get last block number
 	number, err := c.GetLastBlockNumber(ctx)
 	if err != nil {
 		return nil, err
 	}
-	//start fetching last 100 blocks
+	//start fetching last n blocks
 	blockCount := 0
 	blocks := make([]*models.Block, 0)
 	//at start get last block by number
@@ -85,8 +85,8 @@ func (c *client) FindHundredBlocks(ctx context.Context) ([]*models.Block, error)
 	blocks = append(blocks, block)
 	blockCount++
 	//start fetchung last 99 blocks
-	for blockCount < 100 {
-		fmt.Printf("getting block %d\n", blockCount)
+	for blockCount < blocksCount {
+		fmt.Printf("getting block %d\n", blockCount+1)
 		block, err = c.GetBlockByHash(ctx, block.ParentHash)
 		if err != nil {
 			return nil, err
